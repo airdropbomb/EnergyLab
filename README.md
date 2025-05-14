@@ -2,6 +2,10 @@
 
 A Node.js script for automating Energylabs tasks including login, faucet claims, swaps, and staking.
 
+## Registration
+
+New users can register at: [Energylabs Registration](https://defi-energylabs.com/index?ref=BK6QBY01)
+
 ## Features
 
 - Automated login functionality
@@ -34,10 +38,6 @@ username2:password2
 ```bash
 node login.js
 ```
-
-## Registration
-
-New users can register at: [Energylabs Registration](https://defi-energylabs.com/index?ref=BK6QBY01)
 
 ## Features Details
 

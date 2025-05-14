@@ -1,0 +1,13 @@
+{
+  "name": "energylabs-login",
+  "version": "1.0.0",
+  "description": "Energylabs Login Application",
+  "main": "login.js",
+  "scripts": {
+    "start": "node login.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "form-data": "^4.0.0"
+  }
+} 

@@ -147,13 +147,13 @@ function createAxiosInstance(proxy) {
 // Function to check if task is already completed
 async function checkTaskStatus(taskId, cookies) {
     try {
-        const response = await axios.get('https://defi-energylabs.com/tasks', {
+        const response = await axios.get('https://defienergylabs.com/tasks', {
             headers: {
                 'Cookie': cookies,
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
                 'Accept-Language': 'en-US,en;q=0.9',
-                'Referer': 'https://defi-energylabs.com/tasks'
+                'Referer': 'https://defienergylabs.com/tasks'
             }
         });
 
@@ -186,7 +186,7 @@ async function claimDailyFaucet(cookies) {
         const formData = new FormData();
         formData.append('claim', '');
 
-        const response = await axios.post('https://defi-energylabs.com/faucet', formData, {
+        const response = await axios.post('https://defienergylabs.com/faucet', formData, {
             headers: {
                 ...formData.getHeaders(),
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -194,8 +194,8 @@ async function claimDailyFaucet(cookies) {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
                 'Accept-Language': 'en-US,en;q=0.9',
-                'Origin': 'https://defi-energylabs.com',
-                'Referer': 'https://defi-energylabs.com/faucet'
+                'Origin': 'https://defienergylabs.com',
+                'Referer': 'https://defienergylabs.com/faucet'
             }
         });
 
@@ -266,7 +266,7 @@ async function performSwap(cookies, amount, fromToken, toToken) {
         formData.append('to_token', toToken);
         formData.append('swap', '');
 
-        const response = await axios.post('https://defi-energylabs.com/swap', formData, {
+        const response = await axios.post('https://defienergylabs.com/swap', formData, {
             headers: {
                 ...formData.getHeaders(),
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -274,8 +274,8 @@ async function performSwap(cookies, amount, fromToken, toToken) {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
                 'Accept-Language': 'en-US,en;q=0.9',
-                'Origin': 'https://defi-energylabs.com',
-                'Referer': 'https://defi-energylabs.com/swap'
+                'Origin': 'https://defienergylabs.com',
+                'Referer': 'https://defienergylabs.com/swap'
             }
         });
 
@@ -337,13 +337,13 @@ async function performSwap(cookies, amount, fromToken, toToken) {
 async function performStaking(cookies, amount) {
     try {
         // First get the staking page to get any required tokens
-        const getResponse = await axios.get('https://defi-energylabs.com/staking', {
+        const getResponse = await axios.get('https://defienergylabs.com/staking', {
             headers: {
                 'Cookie': cookies,
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
                 'Accept-Language': 'en-US,en;q=0.9',
-                'Referer': 'https://defi-energylabs.com/dashboard'
+                'Referer': 'https://defienergylabs.com/dashboard'
             }
         });
 
@@ -352,7 +352,7 @@ async function performStaking(cookies, amount) {
         formData.append('amount', amount);
         formData.append('stake', '1');
 
-        const response = await axios.post('https://defi-energylabs.com/staking', formData, {
+        const response = await axios.post('https://defienergylabs.com/staking', formData, {
             headers: {
                 ...formData.getHeaders(),
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -360,8 +360,8 @@ async function performStaking(cookies, amount) {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
                 'Accept-Language': 'en-US,en;q=0.9',
-                'Origin': 'https://defi-energylabs.com',
-                'Referer': 'https://defi-energylabs.com/staking'
+                'Origin': 'https://defienergylabs.com',
+                'Referer': 'https://defienergylabs.com/staking'
             },
             maxRedirects: 5,
             validateStatus: function (status) {
@@ -459,7 +459,7 @@ async function completeTask(taskId, cookies) {
         formData.append('task_id', taskId);
         formData.append('complete_task', '');
 
-        const response = await axios.post('https://defi-energylabs.com/tasks', formData, {
+        const response = await axios.post('https://defienergylabs.com/tasks', formData, {
             headers: {
                 ...formData.getHeaders(),
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -467,8 +467,8 @@ async function completeTask(taskId, cookies) {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
                 'Accept-Language': 'en-US,en;q=0.9',
-                'Origin': 'https://defi-energylabs.com',
-                'Referer': 'https://defi-energylabs.com/tasks'
+                'Origin': 'https://defienergylabs.com',
+                'Referer': 'https://defienergylabs.com/tasks'
             }
         });
 
@@ -565,13 +565,13 @@ async function handleFaucetAndSwap(cookieString, username, allAccounts, currentI
         { from: 'ENRG', to: 'WENRG' },
         { from: 'ENRG', to: 'WENRG' },
         { from: 'WENRG', to: 'ENRG' },
-        { from: 'ENRG', to: 'WENRG' },
-        { from: 'WENRG', to: 'ENRG' }
+        { from: 'WENRG', to: 'ENRG' },
+        { from: 'ENRG', to: 'WENRG' }
     ];
     
     for (let i = 1; i <= 5; i++) {
-        // Generate random amount between 0.5 and 1.2
-        const amount = (Math.random() * (1.2 - 0.5) + 0.5).toFixed(2);
+        // Generate random amount between 1 and 3
+        const amount = (Math.random() * (3 - 1) + 1).toFixed(2);
         const { from, to } = swapPatterns[i - 1];
         
         console.log(`${colors.fg.cyan}[${getCurrentTime()}] [${username}] Swap ${i}/5 (${from} → ${to}: ${amount})${colors.reset}`);
@@ -593,19 +593,28 @@ async function handleFaucetAndSwap(cookieString, username, allAccounts, currentI
     }
 
     // Perform staking regardless of swap status
-    const stakeAmount = '1';
-    console.log(`${colors.fg.cyan}[${getCurrentTime()}] [${username}] Performing Staking (Amount: ${stakeAmount})...${colors.reset}`);
-    const stakeResult = await performStaking(cookieString, stakeAmount);
+    console.log(`${colors.fg.cyan}[${getCurrentTime()}] [${username}] Performing Staking...${colors.reset}`);
     
-    if (stakeResult.status === 'success') {
-        console.log(`${colors.fg.green}[${getCurrentTime()}] [${username}] Staking: Success (Amount: ${stakeAmount})${colors.reset}`);
-    } else if (stakeResult.status === 'already_staked') {
-        console.log(`${colors.fg.yellow}[${getCurrentTime()}] [${username}] Staking: Already Staked Today (Amount: ${stakeAmount})${colors.reset}`);
-    } else {
-        console.log(`${colors.fg.red}[${getCurrentTime()}] [${username}] Staking: ${stakeResult.message} (Amount: ${stakeAmount})${colors.reset}`);
-        if (stakeResult.response) {
-            console.log(`${colors.fg.dim}[${getCurrentTime()}] [${username}] Error Details: ${JSON.stringify(stakeResult.response).substring(0, 200)}...${colors.reset}`);
+    // Perform 3 stakes with random amounts
+    for (let i = 1; i <= 3; i++) {
+        const stakeAmount = (Math.random() * (2 - 0.5) + 0.5).toFixed(2);
+        console.log(`${colors.fg.cyan}[${getCurrentTime()}] [${username}] Staking ${i}/3 (Amount: ${stakeAmount})...${colors.reset}`);
+        const stakeResult = await performStaking(cookieString, stakeAmount);
+        
+        if (stakeResult.status === 'success') {
+            console.log(`${colors.fg.green}[${getCurrentTime()}] [${username}] Staking ${i}: Success (Amount: ${stakeAmount})${colors.reset}`);
+        } else if (stakeResult.status === 'already_staked') {
+            console.log(`${colors.fg.yellow}[${getCurrentTime()}] [${username}] Staking ${i}: Already Staked Today (Amount: ${stakeAmount})${colors.reset}`);
+            break;
+        } else {
+            console.log(`${colors.fg.red}[${getCurrentTime()}] [${username}] Staking ${i}: ${stakeResult.message} (Amount: ${stakeAmount})${colors.reset}`);
+            if (stakeResult.response) {
+                console.log(`${colors.fg.dim}[${getCurrentTime()}] [${username}] Error Details: ${JSON.stringify(stakeResult.response).substring(0, 200)}...${colors.reset}`);
+            }
         }
+        
+        // Wait for 2 seconds before next stake
+        await new Promise(resolve => setTimeout(resolve, 2000));
     }
 
     // If swaps were already done, switch to next account
@@ -718,12 +727,12 @@ async function performLogin(username, password, proxy) {
         loginFormData.append('password', password);
         loginFormData.append('login', '');
 
-        const loginResponse = await axiosInstance.post('https://defi-energylabs.com/index', loginFormData, {
+        const loginResponse = await axiosInstance.post('https://defienergylabs.com/index', loginFormData, {
             headers: {
                 ...loginFormData.getHeaders(),
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Origin': 'https://defi-energylabs.com',
-                'Referer': 'https://defi-energylabs.com/index'
+                'Origin': 'https://defienergylabs.com',
+                'Referer': 'https://defienergylabs.com/index'
             },
             maxRedirects: 0,
             validateStatus: function (status) {
@@ -748,13 +757,13 @@ async function performLogin(username, password, proxy) {
             await new Promise(resolve => setTimeout(resolve, 2000));
 
             try {
-                await axios.get('https://defi-energylabs.com/dashboard', {
+                await axios.get('https://defienergylabs.com/dashboard', {
                     headers: {
                         'Cookie': cookieString,
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
                         'Accept-Language': 'en-US,en;q=0.9',
-                        'Referer': 'https://defi-energylabs.com/index'
+                        'Referer': 'https://defienergylabs.com/index'
                     }
                 });
                 return cookieString;

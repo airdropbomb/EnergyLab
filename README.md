@@ -20,8 +20,7 @@ New users can register at: [Energylabs Registration](https://defi-energylabs.com
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/himanshusaroha648/EnergyLab.git
-cd EnergyLab
+git clone https://github.com/airdropbomb/EnergyLab.git && cd EnergyLab
 ```
 
 2. Install dependencies:

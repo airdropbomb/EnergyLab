@@ -50,7 +50,8 @@ const tasks = [
 
 // Updated banner with new ASCII art
 const banner = `
-${colors.fg.cyan} █████╗ ██████╗ ██████╗     ███╗   ██╗ ██████╗ ██████╗ ███████╗
+${colors.fg.cyan} 
+ █████╗ ██████╗ ██████╗     ███╗   ██╗ ██████╗ ██████╗ ███████╗
 ██╔══██╗██╔══██╗██╔══██╗    ████╗  ██║██╔═══██╗██╔══██╗██╔════╝
 ███████║██║  ██║██████╔╝    ██╔██╗ ██║██║   ██║██║  ██║█████╗
 ██╔══██║██║  ██║██╔══██╗    ██║╚██╗██║██║   ██║██║  ██║██╔══╝
@@ -629,6 +630,14 @@ async function startDailyRoute(accounts, proxies, rl) {
     console.log(`${colors.fg.cyan}[${getCurrentTime()}] Starting Daily Route...${colors.reset}`);
     console.log(`${colors.fg.yellow}Faucet claim and swap will run every 24 hours for all accounts. Press Ctrl+C to stop.${colors.reset}`);
 
+    // Function to format time in HH:MM:SS
+    const formatTime = (seconds) => {
+        const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+        const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+        const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+        return `${h}:${m}:${s}`;
+    };
+
     // Function to process all accounts once
     const processAllAccounts = async () => {
         for (let i = 0; i < accounts.length; i++) {
@@ -656,15 +665,22 @@ async function startDailyRoute(accounts, proxies, rl) {
     // Run immediately for the first time
     await processAllAccounts();
 
-    // Schedule to run every 24 hours
+    // Initialize countdown timer
+    let timeRemaining = 24 * 60 * 60; // 24 hours in seconds
     const interval = setInterval(async () => {
-        console.log(`${colors.fg.cyan}[${getCurrentTime()}] Starting new daily route cycle...${colors.reset}`);
-        await processAllAccounts();
-    }, 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+        timeRemaining -= 1;
+        process.stdout.write(`\r${colors.fg.cyan}[${getCurrentTime()}] Time until next cycle: ${formatTime(timeRemaining)}${colors.reset} `);
+        
+        if (timeRemaining <= 0) {
+            console.log(`\n${colors.fg.cyan}[${getCurrentTime()}] Starting new daily route cycle...${colors.reset}`);
+            await processAllAccounts();
+            timeRemaining = 24 * 60 * 60; // Reset timer
+        }
+    }, 1000); // Update every second
 
     // Allow user to stop the daily route
     rl.on('SIGINT', () => {
-        console.log(`${colors.fg.yellow}[${getCurrentTime()}] Stopping daily route...${colors.reset}`);
+        console.log(`\n${colors.fg.yellow}[${getCurrentTime()}] Stopping daily route...${colors.reset}`);
         clearInterval(interval);
         console.log(`${colors.fg.green}Returning to main menu...${colors.reset}`);
         showMenu(rl);
@@ -820,7 +836,7 @@ async function performLogin(username, password, proxy) {
                 return null;
             }
         } else {
-            console.log(`${colors.fg.red}[${getCurrentTime()}] [${username}] Login Failed - Please check credentials${colors.reset}`);
+            console.log(`${colors.fg.red}[${getCurrentTime()}] [${username}] Login Failed - Please check credentials${colors.resetVAC}`);
             return null;
         }
     } catch (error) {

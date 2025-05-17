@@ -4,7 +4,7 @@ A Node.js script for automating Energylabs tasks including login, faucet claims,
 
 ## Registration
 
-New users can register at: [Energylabs Registration](https://defi-energylabs.com/index?ref=BK6QBY01)
+New users can register at: [Energylabs Registration](https://defienergylabs.com/index?ref=PB8G3SXS)
 
 ## Features
 

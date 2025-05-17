@@ -48,18 +48,16 @@ const tasks = [
     { id: 6, name: 'Retweet our pinned tweet' }
 ];
 
-// Add this at the top of the file, after the imports
+// Updated banner with new ASCII art
 const banner = `
-${colors.fg.cyan}ENERGYYLAB
-${colors.fg.yellow}Developed by HIMANSHU SAROHA
-${colors.fg.green} /$$$$$$$$ /$$   /$$ /$$$$$$$$ /$$$$$$$   /$$$$$$  /$$     /$$ /$$        /$$$$$$  /$$$$$$$ 
-| $$_____/| $$$ | $$| $$_____/| $$__  $$ /$$__  $$|  $$   /$$/| $$       /$$__  $$| $$__  $$
-| $$      | $$$$| $$| $$      | $$  \\ $$| $$  \\__/ \\  $$ /$$/ | $$      | $$  \\ $$| $$  \\ $$
-| $$$$$   | $$ $$ $$| $$$$$   | $$$$$$$/| $$ /$$$$  \\  $$$$/  | $$      | $$$$$$$$| $$$$$$$ 
-| $$__/   | $$  $$$$| $$__/   | $$__  $$| $$|_  $$   \\  $$/   | $$      | $$__  $$| $$__  $$
-| $$      | $$\\  $$$| $$      | $$  \\ $$| $$  \\ $$    | $$    | $$      | $$  | $$| $$  \\ $$
-| $$$$$$$$| $$ \\  $$| $$$$$$$$| $$  | $$|  $$$$$$/    | $$    | $$$$$$$$| $$  | $$| $$$$$$$/
-|________/|__/  \\__/|________/|__/  |__/ \\______/     |__/    |________/|__/  |__/|_______/ ${colors.reset}
+${colors.fg.cyan} 
+ █████╗ ██████╗ ██████╗     ███╗   ██╗ ██████╗ ██████╗ ███████╗
+██╔══██╗██╔══██╗██╔══██╗    ████╗  ██║██╔═══██╗██╔══██╗██╔════╝
+███████║██║  ██║██████╔╝    ██╔██╗ ██║██║   ██║██║  ██║█████╗
+██╔══██║██║  ██║██╔══██╗    ██║╚██╗██║██║   ██║██║  ██║██╔══╝
+██║  ██║██████╔╝██████╔╝    ██║ ╚████║╚██████╔╝██████╔╝███████╗
+╚═╝  ╚═╝╚═════╝ ╚═════╝     ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝${colors.reset}
+${colors.fg.yellow}Developed by ADB NODE${colors.reset}
 `;
 
 // Function to read accounts from account.txt
@@ -333,7 +331,7 @@ async function performSwap(cookies, amount, fromToken, toToken) {
     }
 }
 
-// Update performStaking function with correct request format
+// Function to perform staking
 async function performStaking(cookies, amount) {
     try {
         // First get the staking page to get any required tokens
@@ -627,6 +625,53 @@ async function handleFaucetAndSwap(cookieString, username, allAccounts, currentI
     return allSwapsFailed ? 'swap_failed' : 'swap_success';
 }
 
+// Function to start daily route
+async function startDailyRoute(accounts, proxies) {
+    console.log(`${colors.fg.cyan}[${getCurrentTime()}] Starting Daily Route...${colors.reset}`);
+    console.log(`${colors.fg.yellow}Faucet claim and swap will run every 24 hours for all accounts. Press Ctrl+C to stop.${colors.reset}`);
+
+    // Function to process all accounts once
+    const processAllAccounts = async () => {
+        for (let i = 0; i < accounts.length; i++) {
+            const account = accounts[i];
+            const proxy = getRandomProxy(proxies);
+            console.log(`${colors.fg.cyan}[${getCurrentTime()}] Processing account ${i + 1}/${accounts.length}: ${account.username}${colors.reset}`);
+            
+            try {
+                const cookieString = await performLogin(account.username, account.password, proxy);
+                if (cookieString) {
+                    await handleFaucetAndSwap(cookieString, account.username, accounts, i);
+                } else {
+                    console.log(`${colors.fg.red}[${getCurrentTime()}] [${account.username}] Login failed, skipping...${colors.reset}`);
+                }
+            } catch (error) {
+                console.log(`${colors.fg.red}[${getCurrentTime()}] [${account.username}] Error in daily route: ${error.message}${colors.reset}`);
+            }
+            
+            // Wait 2 seconds between accounts
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+        console.log(`${colors.fg.green}[${getCurrentTime()}] Completed one cycle of daily route for all accounts.${colors.reset}`);
+    };
+
+    // Run immediately for the first time
+    await processAllAccounts();
+
+    // Schedule to run every 24 hours
+    const interval = setInterval(async () => {
+        console.log(`${colors.fg.cyan}[${getCurrentTime()}] Starting new daily route cycle...${colors.reset}`);
+        await processAllAccounts();
+    }, 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+
+    // Allow user to stop the daily route
+    rl.on('SIGINT', () => {
+        console.log(`${colors.fg.yellow}[${getCurrentTime()}] Stopping daily route...${colors.reset}`);
+        clearInterval(interval);
+        console.log(`${colors.fg.green}Returning to main menu...${colors.reset}`);
+        showMenu();
+    });
+}
+
 // Function to process multiple accounts
 async function processAccounts(accounts) {
     if (accounts.length === 0) {
@@ -653,14 +698,15 @@ async function processAccounts(accounts) {
         console.log(`${colors.fg.cyan}----------------${colors.reset}`);
         console.log(`${colors.fg.yellow}1. Task Completed${colors.reset}`);
         console.log(`${colors.fg.yellow}2. Faucet claim and swap${colors.reset}`);
-        console.log(`${colors.fg.yellow}3. Exit${colors.reset}`);
+        console.log(`${colors.fg.yellow}3. Daily Route (Auto Faucet & Swap every 24 hours)${colors.reset}`);
+        console.log(`${colors.fg.yellow}4. Exit${colors.reset}`);
         console.log(`${colors.fg.cyan}----------------${colors.reset}`);
         
-        rl.question(`${colors.fg.green}Enter your choice (1-3): ${colors.reset}`, async (choice) => {
+        rl.question(`${colors.fg.green}Enter your choice (1-4): ${colors.reset}`, async (choice) => {
             const trimmedChoice = choice.trim();
             
-            if (!['1', '2', '3'].includes(trimmedChoice)) {
-                console.log(`${colors.fg.red}Invalid choice. Please enter 1, 2, or 3.${colors.reset}`);
+            if (!['1', '2', '3', '4'].includes(trimmedChoice)) {
+                console.log(`${colors.fg.red}Invalid choice. Please enter 1, 2, 3, or 4.${colors.reset}`);
                 showMenu();
                 return;
             }
@@ -683,6 +729,9 @@ async function processAccounts(accounts) {
                     showMenu();
                     break;
                 case '3':
+                    await startDailyRoute(accounts, proxies);
+                    break;
+                case '4':
                     console.log(`${colors.fg.green}Goodbye!${colors.reset}`);
                     rl.close();
                     process.exit(0);
@@ -695,9 +744,9 @@ async function processAccounts(accounts) {
 }
 
 // Function to login and process tasks
-async function loginAndProcessTasks(username, password, allAccounts, currentIndex) {
+async function loginAndProcessTasks(username, password, allAccounts, currentIndex, proxy) {
     try {
-        const cookieString = await performLogin(username, password, null);
+        const cookieString = await performLogin(username, password, proxy);
         if (cookieString) {
             await handleTasks(cookieString, username);
         }
@@ -707,9 +756,9 @@ async function loginAndProcessTasks(username, password, allAccounts, currentInde
 }
 
 // Function to login and process faucet
-async function loginAndProcessFaucet(username, password, allAccounts, currentIndex) {
+async function loginAndProcessFaucet(username, password, allAccounts, currentIndex, proxy) {
     try {
-        const cookieString = await performLogin(username, password, null);
+        const cookieString = await performLogin(username, password, proxy);
         if (cookieString) {
             await handleFaucetAndSwap(cookieString, username, allAccounts, currentIndex);
         }
@@ -786,7 +835,7 @@ async function performLogin(username, password, proxy) {
     }
 }
 
-// Update the getCurrentTime function
+// Function to get current time
 function getCurrentTime() {
     const now = new Date();
     return now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
@@ -794,4 +843,4 @@ function getCurrentTime() {
 
 // Read accounts from account.txt and run the script
 const accounts = readAccounts();
-processAccounts(accounts); 
+processAccounts(accounts);

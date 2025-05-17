@@ -50,13 +50,12 @@ const tasks = [
 
 // Updated banner with new ASCII art
 const banner = `
-${colors.fg.cyan} 
- █████╗ ██████╗ ██████╗     ███╗   ██╗ ██████╗ ██████╗ ███████╗
+${colors.fg.cyan} █████╗ ██████╗ ██████╗     ███╗   ██╗ ██████╗ ██████╗ ███████╗
 ██╔══██╗██╔══██╗██╔══██╗    ████╗  ██║██╔═══██╗██╔══██╗██╔════╝
 ███████║██║  ██║██████╔╝    ██╔██╗ ██║██║   ██║██║  ██║█████╗
 ██╔══██║██║  ██║██╔══██╗    ██║╚██╗██║██║   ██║██║  ██║██╔══╝
 ██║  ██║██████╔╝██████╔╝    ██║ ╚████║╚██████╔╝██████╔╝███████╗
-╚═╝  ╚═╝╚═════╝ ╚═════╝     ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝${colors.reset}
+╚═╝  ╚═╝╚═════╝ ╚═════╝     ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝
 ${colors.fg.yellow}Developed by ADB NODE${colors.reset}
 `;
 
@@ -626,7 +625,7 @@ async function handleFaucetAndSwap(cookieString, username, allAccounts, currentI
 }
 
 // Function to start daily route
-async function startDailyRoute(accounts, proxies) {
+async function startDailyRoute(accounts, proxies, rl) {
     console.log(`${colors.fg.cyan}[${getCurrentTime()}] Starting Daily Route...${colors.reset}`);
     console.log(`${colors.fg.yellow}Faucet claim and swap will run every 24 hours for all accounts. Press Ctrl+C to stop.${colors.reset}`);
 
@@ -668,7 +667,7 @@ async function startDailyRoute(accounts, proxies) {
         console.log(`${colors.fg.yellow}[${getCurrentTime()}] Stopping daily route...${colors.reset}`);
         clearInterval(interval);
         console.log(`${colors.fg.green}Returning to main menu...${colors.reset}`);
-        showMenu();
+        showMenu(rl);
     });
 }
 
@@ -693,7 +692,7 @@ async function processAccounts(accounts) {
     });
 
     // Show menu and handle user choice
-    const showMenu = () => {
+    const showMenu = (rl) => {
         console.log(`${colors.fg.cyan}MAIN MENU${colors.reset}`);
         console.log(`${colors.fg.cyan}----------------${colors.reset}`);
         console.log(`${colors.fg.yellow}1. Task Completed${colors.reset}`);
@@ -707,7 +706,7 @@ async function processAccounts(accounts) {
             
             if (!['1', '2', '3', '4'].includes(trimmedChoice)) {
                 console.log(`${colors.fg.red}Invalid choice. Please enter 1, 2, 3, or 4.${colors.reset}`);
-                showMenu();
+                showMenu(rl);
                 return;
             }
 
@@ -722,14 +721,14 @@ async function processAccounts(accounts) {
             switch (trimmedChoice) {
                 case '1':
                     await loginAndProcessTasks(account.username, account.password, accounts, 0, proxy);
-                    showMenu();
+                    showMenu(rl);
                     break;
                 case '2':
                     await loginAndProcessFaucet(account.username, account.password, accounts, 0, proxy);
-                    showMenu();
+                    showMenu(rl);
                     break;
                 case '3':
-                    await startDailyRoute(accounts, proxies);
+                    await startDailyRoute(accounts, proxies, rl);
                     break;
                 case '4':
                     console.log(`${colors.fg.green}Goodbye!${colors.reset}`);
@@ -740,7 +739,7 @@ async function processAccounts(accounts) {
         });
     };
 
-    showMenu();
+    showMenu(rl);
 }
 
 // Function to login and process tasks

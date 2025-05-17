@@ -470,13 +470,16 @@ async function completeTask(taskId, cookies) {
             }
         });
 
+        // Get the response HTML
+        const html = response.data;
+
         // Check if task was actually completed
         const isNowCompleted = await checkTaskStatus(taskId, cookies);
         if (isNowCompleted) {
             return {
                 taskId,
                 status: 200,
-                data: response.data
+                data: html
             };
         } else {
             // Double check if task was already completed
@@ -487,11 +490,14 @@ async function completeTask(taskId, cookies) {
                     status: 'already_completed'
                 };
             }
+            // Check for specific error messages in response
+            const errorMatch = html.match(/<div class="alert alert-danger">(.*?)<\/div>/);
+            const errorMessage = errorMatch ? errorMatch[1].trim() : 'Task completion failed';
             return {
                 taskId,
                 status: 'failed',
-                error: 'Task completion failed',
-                response: response.data
+                error: errorMessage,
+                response: html
             };
         }
     } catch (error) {
@@ -726,21 +732,36 @@ async function processAccounts(accounts) {
                 return;
             }
 
-            const account = accounts[0];
             const proxy = getRandomProxy(proxies);
             if (proxy) {
                 console.log(`${colors.fg.cyan}Using proxy: ${proxy.host}:${proxy.port}${colors.reset}`);
             }
 
-            console.log(`\nProcessing Account: ${account.username}   {1/${accounts.length}}`);
-
             switch (trimmedChoice) {
                 case '1':
-                    await loginAndProcessTasks(account.username, account.password, accounts, 0, proxy);
+                    // Process all accounts for tasks
+                    for (let i = 0; i < accounts.length; i++) {
+                        const account = accounts[i];
+                        console.log(`\nProcessing Account: ${account.username}   {${i + 1}/${accounts.length}}`);
+                        await loginAndProcessTasks(account.username, account.password, accounts, i, proxy);
+                        // Wait 2 seconds between accounts
+                        if (i < accounts.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                        }
+                    }
                     showMenu(rl);
                     break;
                 case '2':
-                    await loginAndProcessFaucet(account.username, account.password, accounts, 0, proxy);
+                    // Process all accounts for faucet and swap
+                    for (let i = 0; i < accounts.length; i++) {
+                        const account = accounts[i];
+                        console.log(`\nProcessing Account: ${account.username}   {${i + 1}/${accounts.length}}`);
+                        await loginAndProcessFaucet(account.username, account.password, accounts, i, proxy);
+                        // Wait 2 seconds between accounts
+                        if (i < accounts.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                        }
+                    }
                     showMenu(rl);
                     break;
                 case '3':
@@ -766,7 +787,7 @@ async function loginAndProcessTasks(username, password, allAccounts, currentInde
             await handleTasks(cookieString, username);
         }
     } catch (error) {
-        console.log(`${colors.fg.red}[${username}] Error processing tasks: ${error.message}${colors.reset}`);
+        console.log(`${colors.fg.red}[${getCurrentTime()}] [${username}] Error processing tasks: ${error.message}${colors.reset}`);
     }
 }
 
@@ -836,7 +857,7 @@ async function performLogin(username, password, proxy) {
                 return null;
             }
         } else {
-            console.log(`${colors.fg.red}[${getCurrentTime()}] [${username}] Login Failed - Please check credentials${colors.resetVAC}`);
+            console.log(`${colors.fg.red}[${getCurrentTime()}] [${username}] Login Failed - Please check credentials${colors.reset}`);
             return null;
         }
     } catch (error) {
